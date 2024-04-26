@@ -5,6 +5,15 @@ const fetch = require('node-fetch')
 
 require('dotenv').config();
 
+const imageStore = {
+    codeforces: "https://cdn.iconscout.com/icon/free/png-256/free-code-forces-3521352-2944796.png",
+    codechef: "https://cdn.codechef.com/sites/all/themes/abessive/cc-logo.png",
+    atcoder: "https://i.namu.wiki/i/oloBJdRd29lBIF-mdv1FjWucpE3tGPhudDBTvOBChAT3A5w9zDUYg51mvn6NNOwoHJZIwxkVyzeXQMhtLAcQOQ.webp",
+    geeksforgeeks: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/43/GeeksforGeeks.svg/1280px-GeeksforGeeks.svg.png",
+    codingninjas: "https://files.codingninjas.in/cnlogo-32511.png",
+    topcoder: "https://cdn.iconscout.com/icon/free/png-256/free-topcoder-3521765-2945263.png",
+}
+
 const DurationInSecondsToString = (durationInSeconds) => {
     durationInSeconds = parseInt(durationInSeconds);
     const durationInMinutes = durationInSeconds / 60;
@@ -34,34 +43,16 @@ const parseInfo = (info) => {
     // console.log(info);
 
 
-    const imageStore = {
-        "CodeForces": "codeforces",
-        "CodeForces::Gym": "codeforces_gym",
-        "TopCoder": "top_coder",
-        "AtCoder": "at_coder",
-        "CS Academy": "cs_academy",
-        "CodeChef": "code_chef",
-        "HackerRank": "hacker_rank",
-        "HackerEarth": "hacker_earth",
-        "Kick Start": "kick_start",
-        "LeetCode": "leet_code",
-        "Toph": "toph",
-    }
-    // const infoParsed = {
-    //     contest_name: info.name,
-    //     site_name: info.site,
-    //     duration: DurationInSecondsToString(info.duration),
-    //     url: info.url,
-    //     in_24_hours: info.in_24_hours.toLocaleLowerCase() === "yes" ? true : false,
-    //     start_time: info.start_time,
-    //     end_time: info.end_time,
-    //     currently_running: new Date(Date.parse(info.start_time)) < new Date() && new Date() < new Date(Date.parse(info.end_time)),
-    //     site_logo: process.env.NODE_ENV === "production" ? `${process.env.BACKEND_URL}/images/${imageStore[info.site]}.png` : `http://localhost:${process.env.PORT}/images/${imageStore[info.site]}.png`,
-    // }
+    const filteredInfo = info.filter(item => {
+        return item.host.includes('codeforces.com') || item.host.includes('codechef.com')
+    })
+
 
     const infoParsed = {}
+
+    console.log(filteredInfo)
     // return infoParsed;
-    return info;
+    return filteredInfo;
 }
 
 
@@ -77,9 +68,62 @@ router.route('/').get((req, res, next) => {
         .then(response => response.json())
         .then(data => {
                 // res.send(data);
-                console.log('Api-Data : ', data);
+                // console.log('Api-Data : ', data);
                 // res.send(data.map((info) => parseInfo(info)));
-                res.send(data.objects);
+
+                const info = data.objects;
+
+                const filteredInfo = info.filter(item => {
+                    return item.host.includes('codeforces.com') || item.host.includes('codechef.com') || item.host.includes('codingninjas.com/codestudio') || item.host.includes('atcoder.jp') || item.host.includes('geeksforgeeks.org') || item.host.includes('topcoder.com')
+                })
+
+                const newData = filteredInfo.map(item => {
+                    const host = item.host
+
+                    switch (host) {
+                        case 'codechef.com' :
+                            return {
+                                ...item,
+                                logo: imageStore.codechef
+                            }
+
+                        case 'codeforces.com' :
+                            return {
+                                ...item,
+                                logo: imageStore.codeforces
+                            }
+
+                        case 'codingninjas.com/codestudio' :
+                            return {
+                                ...item,
+                                logo: imageStore.codingninjas
+                            }
+
+                        case 'atcoder.jp' :
+                            return {
+                                ...item,
+                                logo: imageStore.atcoder
+                            }
+
+                        case 'geeksforgeeks.org' :
+                            return {
+                                ...item,
+                                logo: imageStore.geeksforgeeks
+                            }
+
+                        case 'topcoder.com' :
+                            return {
+                                ...item,
+                                logo: imageStore.topcoder
+                            }
+
+                        default :
+                            item
+                    }
+                })
+
+
+                res.send(newData);
             }
         )
         .catch(error => {
