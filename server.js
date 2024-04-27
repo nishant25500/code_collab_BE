@@ -64,6 +64,7 @@ app.use("/api/v1/get-random-name", require("./routes/api/randomName"));
 app.use("/api/v1/room", require("./routes/api/roomApiHandler"));
 app.use("/api/v1/user/", require("./routes/api/user"));
 app.use("/api/v1/problem", require("./routes/api/problem"));
+app.use("/api/v1/openai", require("./routes/api/openai"));
 
 // protected routes
 app.use(verifyJWT);
