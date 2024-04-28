@@ -5,7 +5,7 @@ const router = express.Router();
 const {GoogleGenerativeAI} = require("@google/generative-ai");
 require("dotenv").config();
 
-router.get("/", async (req, res) => {
+router.post("/", async (req, res) => {
     try {
 
         const {message} = req.body
