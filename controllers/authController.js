@@ -34,12 +34,12 @@ const handleLogin = async (req, res) => {
             },
         },
         "" + process.env.ACCESS_TOKEN_SECRET,
-        {expiresIn: "400h"}
+        {expiresIn: "400d"}
     );
     const refreshToken = jwt.sign(
         {username: foundUser.username},
         "" + process.env.REFRESH_TOKEN_SECRET,
-        {expiresIn: "1d"}
+        {expiresIn: "400d"}
     );
     // Saving refreshToken with current username
     foundUser.refreshToken = refreshToken;
@@ -183,7 +183,7 @@ const handleAccountVerification = async (req, res) => {
 
     transporter.sendMail(
         {
-            from: "guptakabhay929@gmail.com",
+            from: "sudhanshuchaubey273@gmail.com",
             to: foundPendingAccountVerification.email,
             subject: "Thank you for registering with Code Buddy !",
             html: `<h1>Thanks for registering with Code Buddy !</h1>
@@ -236,7 +236,7 @@ const handleForgotPassword = async (req, res) => {
     await newPendingAccountRecover.save();
     transporter.sendMail(
         {
-            from: "guptakabhay929@gmail.com",
+            from: "sudhanshuchaubey273@gmail.com",
             to: FoundUser.email,
             subject: "Account Recovery for " + username,
             html: `<h1>Click on the link below to recover your account</h1>
